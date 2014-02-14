@@ -15,7 +15,7 @@ if pull_requests.count == 0
   puts "    No pull requests.".red
 else
   pull_requests.each do |pull_request|
-    puts "    - #{pull_request}".cyan
+    puts "    - #{pull_request.title}".cyan
   end
 end
 
