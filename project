@@ -3,28 +3,63 @@
 require 'colorize'
 require 'git'
 require 'octokit'
+require 'pivotal-tracker'
+
+#
+# GitHub
+#
 
 client = Octokit::Client.new :access_token => ENV['GITHUB_ACCESS_TOKEN']
 repo = Git.open(Dir.pwd)
-project = repo.remote(:origin).url.match(/\/(\w+)\/(\w+)\.git/).captures.join('/')
+owner_name, repo_name = repo.remote(:origin).url.match(/(\w+)\/(\w+)\.git/).captures
+github_name = [owner_name, repo_name].join '/'
 
-puts "GitHub #{project}".blue
-puts "  Pull requests:".yellow
-pull_requests = client.pull_requests(project)
+puts "GitHub #{github_name}".blue
+puts "  Pull requests:".cyan
+pull_requests = client.pull_requests(github_name)
 if pull_requests.count == 0
-  puts "    No pull requests.".light_green
+  puts "    No pull requests.".black
 else
   pull_requests.each do |pull_request|
-    puts "    - #{pull_request.title}".cyan
+    username = "[#{pull_request.user.login}]".light_green
+    puts "    - #{pull_request.title} #{username}".light_yellow
   end
 end
 
-puts "  Issues:".yellow
-issues = client.issues(project)
+puts "  Issues:".cyan
+issues = client.issues(github_name)
 if issues.count == 0
-  puts "    No issues.".light_green
+  puts "    No issues.".black
 else
   issues.each do |issue|
-    puts "    - #{issue.title}".cyan
+    username = "[#{issue.user.login}]".light_green
+    puts "    - #{issue.title} #{username}".light_yellow
   end
 end
+
+#
+# Pivotal Tracker
+#
+
+PivotalTracker::Client.token = ENV['PIVOTAL_TRACKER_ACCESS_TOKEN']
+project = PivotalTracker::Project.all.select{ |project| project.name.downcase.match(repo_name) }.first
+
+puts
+puts "Pivotal Tracker #{project.name}".blue
+next_unowned_story = nil
+puts "  Current".cyan
+has_current = false
+project.stories.all.each do |story|
+  next if story.accepted_at != nil
+  if story.owned_by == nil and not next_unowned_story
+    next_unowned_story = story
+  elsif story.owned_by
+    has_current = true
+    owner = "[#{story.owned_by}]".light_green
+    puts "    - #{story.name} #{owner}".light_yellow
+  end
+end
+puts "    No stories being worked on.".black unless has_current
+puts "  Next Up".cyan
+puts "    - #{next_unowned_story.name}".light_yellow
+puts
