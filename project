@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+require 'colorize'
+require 'git'
+require 'octokit'
+
+client = Octokit::Client.new :access_token => ENV['GITHUB_ACCESS_TOKEN']
+repo = Git.open(Dir.pwd)
+project = repo.remote(:origin).url.match(/\/(\w+)\/(\w+)\.git/).captures.join('/')
+
+puts "GitHub #{project}".blue
+puts "  Pull requests:".yellow
+pull_requests = client.pull_requests(project)
+if pull_requests.count == 0
+  puts "    No pull requests.".red
+else
+  pull_requests.each do |pull_request|
+    puts "    - #{pull_request}".cyan
+  end
+end
+
+puts "  Issues:".yellow
+issues = client.issues(project)
+if issues.count == 0
+  puts "    No issues.".red
+else
+  issues.each do |issue|
+    puts "    - #{issue.title}".cyan
+  end
+end
