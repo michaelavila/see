@@ -8,8 +8,14 @@ module See
       end
 
       def run(config, info, no_info)
+        token = ENV['CIRCLE_CI_ACCESS_TOKEN']
+        unless token
+          no_info << "CircleCI - " + "You must set CIRCLE_CI_ACCESS_TOKEN env variable".red
+          return
+        end
+
         CircleCi.configure do |cfg|
-          cfg.token = ENV['CIRCLE_CI_ACCESS_TOKEN']
+          cfg.token = token
         end
 
         response = CircleCi::Project.recent_builds(config['circle']['account'], config['circle']['repository'])
