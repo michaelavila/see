@@ -28,20 +28,20 @@ module See
         end
 
         if stories.length > 0
-          info << "Stories being worked on:".light_blue
+          info << "Tracker - " + "Stories being worked on:".light_blue
           info << stories
         else
-          no_info << "No stories being worked on"
+          no_info << "Tracker - " + "No stories being worked on".yellow
         end
 
         if next_unowned_story
-          info << "Next story that can be worked on:".light_blue
+          info << "Tracker - " + "Next story that can be worked on:".light_blue
           time = "(#{next_unowned_story.created_at.strftime("%b %e,%l:%M %p")})".blue
           id = "#{next_unowned_story.id}".light_yellow
           name = next_unowned_story.name
           info << "    - #{name} #{id} #{time}"
         else
-          no_info << "No stories ready to work on"
+          no_info << "Tracker - " + "No stories ready to work on".yellow
         end
       end
     end

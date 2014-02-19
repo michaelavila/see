@@ -15,26 +15,26 @@ module See
 
         pull_requests = client.pull_requests(github_name)
         if pull_requests.count > 0
-          info << "Open pull requests:".light_blue
+          info << "GitHub - " + "Open pull requests:".light_blue
           pull_requests.each do |pull_request|
             username = "[#{pull_request.user.login}]".cyan
             time = "(#{pull_request.updated_at.strftime("%b %e,%l:%M %p")})".blue
             info << "    - #{pull_request.title} #{username} #{time}"
           end
         else
-          no_info << "No open pull requests"
+          no_info << "GitHub - " + "No open pull requests".yellow
         end
 
         issues = client.issues(github_name)
         if issues.count > 0
-          info << "Open issues:".light_blue
+          info << "GitHub - " + "Open issues:".light_blue
           issues.each do |issue|
             username = "[#{issue.user.login}]".cyan
             time = "(#{issue.updated_at.strftime("%b %e,%l:%M %p")})".blue
             info << "    - #{issue.title} #{username} #{time}"
           end
         else
-          no_info << "No open issues"
+          no_info << "GitHub - " + "No open issues".yellow
         end
       end
     end

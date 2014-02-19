@@ -12,7 +12,7 @@ module See
         end
 
         response = CircleCi::Project.recent_builds(config['circle']['account'], config['circle']['repository'])
-        info << "Latest Builds:".light_blue
+        info << "CircleCI - " + "Latest Builds:".light_blue
         response.body[0..4].each do |thing|
           time = "(#{thing['stop_time']})".blue if thing['stop_time']
           if thing['status'].match(/failed|not_run/)
@@ -20,7 +20,7 @@ module See
           else
             status = thing['status'].green
           end
-          info << "    - #{status} #{thing["vcs_revision"][0..8].light_yellow} #{("#"+thing['build_num'].to_s).black} #{thing['subject']} #{thing['author_name'].cyan} #{time}"
+          info << "    - #{status.capitalize} #{thing["vcs_revision"][0..8].light_yellow} #{("#"+thing['build_num'].to_s).light_green} #{thing['subject']} #{thing['author_name'].cyan} #{time}"
         end
       end
     end

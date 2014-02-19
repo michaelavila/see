@@ -34,7 +34,7 @@ module See
       end
 
       puts
-      puts no_info.map(&:yellow)
+      puts no_info
     end
   end
 end
