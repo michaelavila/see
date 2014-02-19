@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s| 
   s.name = 'see'
-  s.version = '0.0.10'
+  s.version = '0.0.11'
   s.author = 'Michael Avila'
   s.email = 'me@michaelavila.com'
   s.platform = Gem::Platform::RUBY
@@ -19,10 +19,11 @@ lib/see.rb
   s.has_rdoc = true
   s.bindir = 'bin'
   s.executables << 'see'
+  s.add_runtime_dependency 'faraday', '0.8.9'
+  s.add_runtime_dependency 'mime-types', '1.18'
   s.add_runtime_dependency 'colorize'
   s.add_runtime_dependency 'travis'
   s.add_runtime_dependency 'octokit'
   s.add_runtime_dependency 'pivotal-tracker'
   s.add_runtime_dependency 'circleci'
-  s.add_runtime_dependency 'faraday', '0.8.9'
 end
