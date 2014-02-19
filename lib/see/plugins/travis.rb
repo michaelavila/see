@@ -10,8 +10,12 @@ module See
       def run(config, info, no_info)
         repository = config["travis"]["repository"]
         builds = Travis::Repository.find(repository).recent_builds[0..4].map do |build|
-          time = "- #{build.finished_at.strftime("%b %e,%l:%M %p")}".black
-          state = build.failed? ? build.state.capitalize.red : build.state.capitalize.green
+          time = ( build.finished_at ? "- #{build.finished_at.strftime("%b %e,%l:%M %p")}" : "- running" ).black
+          if build.pending?
+            state = build.state.capitalize.cyan
+          else
+            state = build.unsuccessful? ? build.state.capitalize.red : build.state.capitalize.green
+          end
           "  - #{state} #{build.commit.short_sha.light_yellow} #{("#"+build.number).light_green} #{build.commit.subject} #{time}"
         end
 
