@@ -20,7 +20,12 @@ module See
           else
             status = thing['status'].green
           end
-          info << "    - #{status.capitalize} #{thing["vcs_revision"][0..8].light_yellow} #{("#"+thing['build_num'].to_s).light_green} #{thing['subject']} #{thing['author_name'].cyan} #{time}"
+          if thing['author_name']
+            name = "[#{thing['author_name']}]".cyan
+          else
+            name = ""
+          end
+          info << "    - #{status.capitalize} #{thing["vcs_revision"][0..8].light_yellow} #{("#"+thing['build_num'].to_s).light_green} #{thing['subject']} #{name} #{time}"
         end
       end
     end
