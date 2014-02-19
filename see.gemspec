@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s| 
   s.name = 'see'
-  s.version = '0.0.6'
+  s.version = '0.0.8'
   s.author = 'Michael Avila'
   s.email = 'me@michaelavila.com'
   s.platform = Gem::Platform::RUBY
@@ -24,4 +24,5 @@ lib/see.rb
   s.add_runtime_dependency 'octokit'
   s.add_runtime_dependency 'pivotal-tracker'
   s.add_runtime_dependency 'circleci'
+  s.add_runtime_dependency 'faraday', '0.8.9'
 end

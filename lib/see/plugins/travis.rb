@@ -12,7 +12,7 @@ module See
         client = Travis::Client.new
 
         repository = config["travis"]["repository"]
-        builds = client.repo(repository).recent_builds.map do |build|
+        builds = client.repo(repository).recent_builds[0..4].map do |build|
           time = "(#{build.finished_at.strftime("%b %e,%l:%M %p")})".blue
           state = build.failed? ? build.state.capitalize.red : build.state.capitalize.green
           "    - #{state} #{build.commit.short_sha.light_yellow} #{build.commit.subject} #{build.job_ids.to_s.light_magenta} #{time}"
