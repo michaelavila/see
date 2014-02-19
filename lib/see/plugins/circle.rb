@@ -1,3 +1,4 @@
+require 'json'
 
 module See
   module Plugins
@@ -7,12 +8,19 @@ module See
       end
 
       def run(config, info, no_info)
-        CircleCi.configure do |config|
-            config.token = ENV['CIRCLE_CI_ACCESS_TOKEN']
+        CircleCi.configure do |cfg|
+          cfg.token = ENV['CIRCLE_CI_ACCESS_TOKEN']
         end
 
         response = CircleCi::Project.recent_builds(config['circle']['account'], config['circle']['repository'])
         info << "\nCircleCI - " + "Latest Builds:".light_blue
+        if response.errors.length > 0
+          response.errors.each do |error|
+            info << "  - " + "Error #{error.code}:".red + " #{JSON.parse(error.message)['message'].strip}"
+          end
+          return info
+        end
+
         response.body[0..4].each do |thing|
           if thing['committer_date']
             time = "- #{Date.parse(thing['committer_date']).strftime("%b %e,%l:%M %p")}".black
