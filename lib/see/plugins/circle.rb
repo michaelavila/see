@@ -18,7 +18,7 @@ module See
           response.errors.each do |error|
             info << "  - " + "Error #{error.code}:".red + " #{JSON.parse(error.message)['message'].strip}"
           end
-          return info
+          return
         end
 
         response.body[0..4].each do |thing|
