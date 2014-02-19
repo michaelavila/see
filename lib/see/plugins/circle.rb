@@ -8,7 +8,7 @@ module See
 
       def run(config, info, no_info)
         CircleCi.configure do |config|
-            config.token = '6cb3ee6ee8ed3b2399bfae16294ef2291cfde9bb'
+            config.token = ENV['CIRCLE_CI_ACCESS_TOKEN']
         end
 
         response = CircleCi::Project.recent_builds(config['circle']['account'], config['circle']['repository'])
