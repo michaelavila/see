@@ -8,7 +8,13 @@ module See
       end
 
       def run(config, info, no_info)
-        PivotalTracker::Client.token = ENV['PIVOTAL_TRACKER_ACCESS_TOKEN']
+        token = ENV['PIVOTAL_TRACKER_ACCESS_TOKEN']
+        unless token
+          no_info << "Tracker - " + "You must set PIVOTAL_TRACKER_ACCESS_TOKEN env variable".red
+          return
+        end
+
+        PivotalTracker::Client.token = token
         project = PivotalTracker::Project.find(config['pivotal']['project'])
 
         next_unowned_story = nil
