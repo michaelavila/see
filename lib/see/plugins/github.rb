@@ -15,7 +15,7 @@ module See
 
         pull_requests = client.pull_requests(github_name)
         if pull_requests.count > 0
-          info << "GitHub - " + "Open pull requests:".light_blue
+          info << "\nGitHub - " + "Open pull requests:".light_blue
           pull_requests.each do |pull_request|
             username = "[#{pull_request.user.login}]".cyan
             time = "- #{pull_request.updated_at.strftime("%b %e,%l:%M %p")}".black
@@ -27,7 +27,7 @@ module See
 
         issues = client.issues(github_name)
         if issues.count > 0
-          info << "GitHub - " + "Open issues:".light_blue
+          info << "\nGitHub - " + "Open issues:".light_blue
           issues.each do |issue|
             username = "[#{issue.user.login}]".cyan
             time = "- #{issue.updated_at.strftime("%b %e,%l:%M %p")}".black

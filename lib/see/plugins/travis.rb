@@ -16,7 +16,7 @@ module See
         end
 
         if builds.count > 0
-          info << "Travis - " + "Latest Builds:".light_blue
+          info << "\nTravis - " + "Latest Builds:".light_blue
           info.concat(builds)
         else
           no_info << "Travis - " + "No available build status".yellow

@@ -12,7 +12,7 @@ module See
         end
 
         response = CircleCi::Project.recent_builds(config['circle']['account'], config['circle']['repository'])
-        info << "CircleCI - " + "Latest Builds:".light_blue
+        info << "\nCircleCI - " + "Latest Builds:".light_blue
         response.body[0..4].each do |thing|
           if thing['committer_date']
             time = "- #{Date.parse(thing['committer_date']).strftime("%b %e,%l:%M %p")}".black

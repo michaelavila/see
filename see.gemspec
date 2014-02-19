@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s| 
   s.name = 'see'
-  s.version = '0.0.12'
+  s.version = '0.0.13'
   s.author = 'Michael Avila'
   s.email = 'me@michaelavila.com'
   s.platform = Gem::Platform::RUBY
@@ -20,7 +20,7 @@ lib/see.rb
   s.bindir = 'bin'
   s.executables << 'see'
   s.add_runtime_dependency 'faraday', '0.8.9'
-  s.add_runtime_dependency 'mime-types', '1.25.1'
+  s.add_runtime_dependency 'mime-types', '~> 1.25.1'
   s.add_runtime_dependency 'colorize'
   s.add_runtime_dependency 'travis'
   s.add_runtime_dependency 'octokit'
