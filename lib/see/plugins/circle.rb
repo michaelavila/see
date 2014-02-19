@@ -14,18 +14,20 @@ module See
         response = CircleCi::Project.recent_builds(config['circle']['account'], config['circle']['repository'])
         info << "CircleCI - " + "Latest Builds:".light_blue
         response.body[0..4].each do |thing|
-          time = "(#{thing['stop_time']})".blue if thing['stop_time']
+          if thing['committer_date']
+            time = "- #{Date.parse(thing['committer_date']).strftime("%b %e,%l:%M %p")}".black
+          end
           if thing['status'].match(/failed|not_run/)
             status = thing['status'].red
           else
             status = thing['status'].green
           end
-          if thing['author_name']
-            name = "[#{thing['author_name']}]".cyan
+          if thing['committer_name']
+            name = "[#{thing['committer_name']}]".cyan
           else
             name = ""
           end
-          info << "    - #{status.capitalize} #{thing["vcs_revision"][0..8].light_yellow} #{("#"+thing['build_num'].to_s).light_green} #{thing['subject']} #{name} #{time}"
+          info << "  - #{status.capitalize} #{thing["vcs_revision"][0..8].light_yellow} #{("#"+thing['build_num'].to_s).light_green} #{thing['subject']} #{name} #{time}"
         end
       end
     end

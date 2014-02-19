@@ -18,8 +18,8 @@ module See
           info << "GitHub - " + "Open pull requests:".light_blue
           pull_requests.each do |pull_request|
             username = "[#{pull_request.user.login}]".cyan
-            time = "(#{pull_request.updated_at.strftime("%b %e,%l:%M %p")})".blue
-            info << "    - #{pull_request.title} #{username} #{time}"
+            time = "- #{pull_request.updated_at.strftime("%b %e,%l:%M %p")}".black
+            info << "  - #{pull_request.title} #{username} #{time}"
           end
         else
           no_info << "GitHub - " + "No open pull requests".yellow
@@ -30,8 +30,8 @@ module See
           info << "GitHub - " + "Open issues:".light_blue
           issues.each do |issue|
             username = "[#{issue.user.login}]".cyan
-            time = "(#{issue.updated_at.strftime("%b %e,%l:%M %p")})".blue
-            info << "    - #{issue.title} #{username} #{time}"
+            time = "- #{issue.updated_at.strftime("%b %e,%l:%M %p")}".black
+            info << "  - #{issue.title} #{username} #{time}"
           end
         else
           no_info << "GitHub - " + "No open issues".yellow

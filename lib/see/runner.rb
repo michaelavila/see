@@ -34,7 +34,10 @@ module See
       end
 
       puts
-      puts no_info
+      if no_info.count > 0
+        puts no_info
+        puts
+      end
     end
   end
 end

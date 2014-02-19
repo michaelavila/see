@@ -21,9 +21,9 @@ module See
           elsif story.owned_by
             has_current = true
             owner = "[#{story.owned_by}]".cyan
-            time = "(#{story.created_at.strftime("%b %e,%l:%M %p")})".blue
+            time = "- #{story.created_at.strftime("%b %e,%l:%M %p")}".black
             id = "#{story.id}".light_yellow
-            stories << "    - #{story.name} #{owner} #{id} #{time}"
+            stories << "  - #{story.name} #{owner} #{id} #{time}"
           end
         end
 
@@ -36,10 +36,10 @@ module See
 
         if next_unowned_story
           info << "Tracker - " + "Next story that can be worked on:".light_blue
-          time = "(#{next_unowned_story.created_at.strftime("%b %e,%l:%M %p")})".blue
+          time = "- #{next_unowned_story.created_at.strftime("%b %e,%l:%M %p")}".black
           id = "#{next_unowned_story.id}".light_yellow
           name = next_unowned_story.name
-          info << "    - #{name} #{id} #{time}"
+          info << "  - #{name} #{id} #{time}"
         else
           no_info << "Tracker - " + "No stories ready to work on".yellow
         end
