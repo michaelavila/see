@@ -3,5 +3,8 @@ github:
   repository: see
 travis:
   repository: michaelavila/see
+circle:
+  account: michaelavila
+  repository: see
 pivotal:
   project: 1016378
