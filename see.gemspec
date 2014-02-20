@@ -19,6 +19,7 @@ lib/see.rb
   s.has_rdoc = true
   s.bindir = 'bin'
   s.executables << 'see'
+  s.add_development_dependency 'rake'
   s.add_runtime_dependency 'faraday', '0.8.9'
   s.add_runtime_dependency 'mime-types', '~> 1.25.1'
   s.add_runtime_dependency 'colorize'
