@@ -7,7 +7,8 @@ module See
         'travis'
       end
 
-      def run(config, info, no_info)
+      def run(config)
+        info = []
         repository = config["travis"]["repository"]
         builds = Travis::Repository.find(repository).recent_builds[0..4].map do |build|
           time = ( build.finished_at ? "- #{build.finished_at.strftime("%b %e,%l:%M %p")}" : "- running" ).black
@@ -16,15 +17,19 @@ module See
           else
             state = build.unsuccessful? ? build.state.capitalize.red : build.state.capitalize.green
           end
-          "  - #{state} #{build.commit.short_sha.light_yellow} #{("#"+build.number).light_green} #{build.commit.subject} #{time}"
+          name = "[#{build.commit.author_name}]".cyan
+          "    - #{state} #{build.commit.short_sha.light_yellow} #{("#"+build.number).light_green} #{build.commit.subject} #{name} #{time}"
         end
 
         if builds.count > 0
-          info << "\nTravis - " + "Latest Builds:".light_blue
+          info << "\nTravis".light_magenta
+          info << "  Latest Builds:".light_blue
           info.concat(builds)
         else
-          no_info << "Travis - " + "No available build status".yellow
+          info << "Travis"
+          info << "No available build status".yellow
         end
+        info
       end
     end
   end

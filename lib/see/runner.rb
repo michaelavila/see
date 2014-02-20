@@ -35,29 +35,18 @@ module See
       threads = []
       config.each do |cfg|
         threads << Thread.new do
-          See::Plugins.run_plugin(cfg[0], config, good=[], bad=[])
-          Thread.current[:good] = good
-          Thread.current[:bad] = bad
+          Thread.current[:lines] = See::Plugins.run_plugin(cfg[0], config)
         end
       end
-
-      good = []
-      bad = []
-      threads.each do |t|
-        t.join
-        good << t[:good] if t[:good]
-        bad << t[:bad] if t[:bad]
-      end
+      puts
 
       progress.kill
-      puts
 
-      good.sort_by {|a| a[0]}.each {|g| puts g}
-      puts
-      unless bad.empty?
-        puts bad.sort
-        puts
+      threads.each do |t|
+        t.join
+        t[:lines].each { |line| puts line }
       end
+      puts
     end
   end
 end

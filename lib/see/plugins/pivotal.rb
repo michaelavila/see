@@ -7,11 +7,13 @@ module See
         "pivotal"
       end
 
-      def run(config, info, no_info)
+      def run(config)
+        info = []
         token = ENV['PIVOTAL_TRACKER_ACCESS_TOKEN']
         unless token
-          no_info << "Tracker - " + "You must set PIVOTAL_TRACKER_ACCESS_TOKEN env variable".red
-          return
+          info << "\nPivotal Tracker".light_red
+          info << "  You must set PIVOTAL_TRACKER_ACCESS_TOKEN env variable".red
+          return info
         end
 
         PivotalTracker::Client.token = token
@@ -19,6 +21,7 @@ module See
 
         next_unowned_story = nil
         has_current = false
+
         stories = []
         project.stories.all.each do |story|
           next if story.accepted_at != nil
@@ -33,22 +36,25 @@ module See
           end
         end
 
+        info << "\nPivotal Tracker".light_magenta
         if stories.length > 0
-          info << "\nTracker - " + "Stories being worked on:".light_blue
+          info << "  Stories being worked on:".light_blue
           info << stories
         else
-          no_info << "Tracker - " + "No stories being worked on".yellow
+          info << "  No stories being worked on".yellow
         end
 
+
         if next_unowned_story
-          info << "\nTracker - " + "Next story that can be worked on:".light_blue
+          info << "  Next story that can be worked on:".light_blue
           time = "- #{next_unowned_story.created_at.strftime("%b %e,%l:%M %p")}".black
           id = "#{next_unowned_story.id}".light_yellow
           name = next_unowned_story.name
-          info << "  - #{name} #{id} #{time}"
+          info << "    - #{id} #{name} #{time}"
         else
-          no_info << "Tracker - " + "No stories ready to work on".yellow
+          info << "No stories ready to work on".yellow
         end
+        info
       end
     end
   end
