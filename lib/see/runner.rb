@@ -24,18 +24,38 @@ module See
         exit 1
       end
 
-      info = []
-      no_info = []
-      config.each do |configuration|
-        info = []
-        name = configuration[0]
-        See::Plugins.run_plugin(name, config, info, no_info)
-        puts info
+      progress = Thread.new do
+        print "Pulling data from #{config.length} source#{config.length == 1 ? '' : 's'}"
+        while true
+          sleep 0.25
+          print '.'
+        end
       end
 
+      threads = []
+      config.each do |cfg|
+        threads << Thread.new do
+          See::Plugins.run_plugin(cfg[0], config, good=[], bad=[])
+          Thread.current[:good] = good
+          Thread.current[:bad] = bad
+        end
+      end
+
+      good = []
+      bad = []
+      threads.each do |t|
+        t.join
+        good << t[:good] if t[:good]
+        bad << t[:bad] if t[:bad]
+      end
+
+      progress.kill
       puts
-      if no_info.count > 0
-        puts no_info
+
+      good.sort_by {|a| a[0]}.each {|g| puts g}
+      puts
+      unless bad.empty?
+        puts bad.sort
         puts
       end
     end
