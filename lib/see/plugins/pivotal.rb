@@ -32,7 +32,7 @@ module See
             owner = "[#{story.owned_by}]".cyan
             time = "- #{story.created_at.strftime("%b %e,%l:%M %p")}".black
             id = "#{story.id}".light_yellow
-            stories << "  - #{story.name} #{owner} #{id} #{time}"
+            stories << "    - #{story.name} #{owner} #{id} #{time}"
           end
         end
 
