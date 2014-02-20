@@ -16,7 +16,7 @@ module See
       end
       
       if plugins.empty?
-        puts "No plugin found with the name \"#{name}\"".light_red
+        info << "No plugin found with the name \"#{name}\"".light_red
       end
       info
     end
