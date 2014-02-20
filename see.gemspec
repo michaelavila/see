@@ -21,7 +21,7 @@ lib/see.rb
   s.executables << 'see'
   s.add_development_dependency 'rake'
   s.add_runtime_dependency 'faraday', '0.8.9'
-  s.add_runtime_dependency 'mime-types', '~> 1.25.1'
+  s.add_runtime_dependency 'mime-types', '>= 1.25.1'
   s.add_runtime_dependency 'colorize'
   s.add_runtime_dependency 'travis'
   s.add_runtime_dependency 'octokit'
