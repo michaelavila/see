@@ -8,3 +8,5 @@ circle:
   repository: see
 pivotal:
   project: 1016378
+nonexistent:
+  foo: bar

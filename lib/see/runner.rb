@@ -9,13 +9,13 @@ module See
     def run
       #
       # Whole thing happens in two major steps:
-      #   1. load ./sights.yml
+      #   1. load ./see.yml
       #     (fail if it doesn't exist)
       #
       #   2. provide information from each configured plugin
       #     (provide content at the top and no content at the bottom)
       #
-      config_path = "#{Dir.pwd}/sights.yml"
+      config_path = "#{Dir.pwd}/see.yml"
       begin
         config = YAML.load_file(config_path)
       rescue
