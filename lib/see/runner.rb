@@ -38,14 +38,12 @@ module See
           Thread.current[:lines] = See::Plugins.run_plugin(cfg[0], config)
         end
       end
-      puts
 
+      lines = threads.map { |t| t.join[:lines] }
       progress.kill
 
-      threads.each do |t|
-        t.join
-        t[:lines].each { |line| puts line }
-      end
+      puts
+      lines.sort_by { |l| l[0] }.each { |l| puts l }
       puts
     end
   end
