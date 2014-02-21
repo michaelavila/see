@@ -17,7 +17,7 @@ module See
       #
       config = load_config
 
-      progress = ProgressIndicator.start(config)
+      progress = ProgressIndicator.start(config.length)
       threads = []
       config.each do |cfg|
         threads << Thread.new do
@@ -53,27 +53,27 @@ module See
       end
       config
     end
+  end
 
-    class ProgressIndicator
-      def self.start(config)
-        progress = ProgressIndicator.new
-        progress.start(config)
-        progress
-      end
+  class ProgressIndicator
+    def self.start(things_todo_count)
+      progress = ProgressIndicator.new
+      progress.start(things_todo_count)
+      progress
+    end
 
-      def start(config)
-        @progress = Thread.new do
-          print "Pulling data from #{config.length} source#{config.length == 1 ? '' : 's'}"
-          loop do
-            sleep 0.25
-            print '.'
-          end
+    def start(things_todo_count)
+      @progress = Thread.new do
+        print "Pulling data from #{things_todo_count} source#{things_todo_count == 1 ? '' : 's'}"
+        loop do
+          sleep 0.25
+          print '.'
         end
       end
+    end
 
-      def stop
-        @progress.kill
-      end
+    def stop
+      @progress.kill
     end
   end
 end
