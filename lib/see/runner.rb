@@ -15,24 +15,9 @@ module See
       #   2. provide information from each configured plugin
       #     (provide content at the top and no content at the bottom)
       #
-      config_path = "#{Dir.pwd}/see.yml"
-      begin
-        config = YAML.load_file(config_path)
-      rescue => error
-        puts "No configuration file found (tried #{config_path})".yellow
-        puts '  (if the file exists it may be malformed)'
-        puts "  #{error}".light_red
-        exit 1
-      end
+      config = load_config
 
-      progress = Thread.new do
-        print "Pulling data from #{config.length} source#{config.length == 1 ? '' : 's'}"
-        loop do
-          sleep 0.25
-          print '.'
-        end
-      end
-
+      progress = ProgressIndicator.start(config)
       threads = []
       config.each do |cfg|
         threads << Thread.new do
@@ -44,9 +29,8 @@ module See
           end
         end
       end
-
       lines = threads.map { |t| t.join[:lines] }
-      progress.kill
+      progress.stop
 
       puts
       # I don't understand the point of the sort_by below. It gives me
@@ -55,6 +39,41 @@ module See
       #     lines.each { |l| puts l }
       lines.sort_by { |l| l[0] }.each { |l| puts l }
       puts
+    end
+
+    def load_config
+      config_path = "#{Dir.pwd}/see.yml"
+      begin
+        config = YAML.load_file(config_path)
+      rescue => error
+        puts "No configuration file found (tried #{config_path})".yellow
+        puts '  (if the file exists it may be malformed)'
+        puts "  #{error}".light_red
+        exit 1
+      end
+      config
+    end
+
+    class ProgressIndicator
+      def self.start(config)
+        progress = ProgressIndicator.new
+        progress.start(config)
+        progress
+      end
+
+      def start(config)
+        @progress = Thread.new do
+          print "Pulling data from #{config.length} source#{config.length == 1 ? '' : 's'}"
+          loop do
+            sleep 0.25
+            print '.'
+          end
+        end
+      end
+
+      def stop
+        @progress.kill
+      end
     end
   end
 end
