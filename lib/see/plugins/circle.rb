@@ -13,11 +13,11 @@ module See
       end
 
       def run(config, plugin_config)
-        info = []
+        lines = []
         token = ENV['CIRCLE_CI_ACCESS_TOKEN']
         unless token
-          info << "  You must set CIRCLE_CI_ACCESS_TOKEN env variable".red
-          return info
+          lines << "  You must set CIRCLE_CI_ACCESS_TOKEN env variable".red
+          return lines
         end
 
         CircleCi.configure do |cfg|
@@ -26,14 +26,14 @@ module See
 
         response = CircleCi::Project.recent_builds(plugin_config['account'], plugin_config['repository'])
         if response.errors.length > 0
-          info << "Circle CI - " + "Errors encountered:".red
+          lines << "  Errors encountered:".red
           response.errors.each do |error|
-            info << "  - " + "Error #{error.code}:".red + " #{JSON.parse(error.message)['message'].strip}"
+            lines << "    - " + "Error #{error.code}:".red + " #{JSON.parse(error.message)['message'].strip}"
           end
-          return info
+          return lines
         end
 
-        info << "  Latest Builds:".light_blue
+        lines << "  Latest Builds:".light_blue
         response.body[0..4].each do |thing|
           if thing['committer_date']
             time = "- #{Date.parse(thing['committer_date']).strftime("%b %e,%l:%M %p")}".black
@@ -48,9 +48,9 @@ module See
           else
             name = ""
           end
-          info << "    - #{status.capitalize} #{thing["vcs_revision"][0..8].light_yellow} #{("#"+thing['build_num'].to_s).light_green} #{thing['subject']} #{name} #{time}"
+          lines << "    - #{status.capitalize} #{thing["vcs_revision"][0..8].light_yellow} #{("#"+thing['build_num'].to_s).light_green} #{thing['subject']} #{name} #{time}"
         end
-        info
+        lines
       end
     end
   end
