@@ -49,6 +49,10 @@ module See
       progress.kill
 
       puts
+      # I don't understand the point of the sort_by below. It gives me
+      # the same thing as the following:
+      #
+      #     lines.each { |l| puts l }
       lines.sort_by { |l| l[0] }.each { |l| puts l }
       puts
     end
