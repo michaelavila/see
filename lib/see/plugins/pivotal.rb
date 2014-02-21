@@ -12,14 +12,14 @@ module See
       end
 
       def run(config, plugin_config)
-        info = []
-        token = ENV['PIVOTAL_TRACKER_ACCESS_TOKEN']
-        unless token
-          info << "  You must set PIVOTAL_TRACKER_ACCESS_TOKEN env variable".red
-          return info
+        lines = []
+        @token = ENV['PIVOTAL_TRACKER_ACCESS_TOKEN']
+        unless @token
+          lines << "  You must set PIVOTAL_TRACKER_ACCESS_TOKEN env variable".red
+          return lines
         end
 
-        PivotalTracker::Client.token = token
+        PivotalTracker::Client.token = @token
         project = PivotalTracker::Project.find(plugin_config['project'])
 
         next_unowned_story = nil
@@ -40,23 +40,23 @@ module See
         end
 
         if stories.length > 0
-          info << "  Stories being worked on:".light_blue
-          info << stories
+          lines << "  Stories being worked on:".light_blue
+          lines << stories
         else
-          info << "  No stories being worked on".yellow
+          lines << "  No stories being worked on".yellow
         end
 
 
         if next_unowned_story
-          info << "  Next story that can be worked on:".light_blue
+          lines << "  Next story that can be worked on:".light_blue
           time = "- #{next_unowned_story.created_at.strftime("%b %e,%l:%M %p")}".black
           id = "#{next_unowned_story.id}".light_yellow
           name = next_unowned_story.name
-          info << "    - #{id} #{name} #{time}"
+          lines << "    - #{id} #{name} #{time}"
         else
-          info << "No stories ready to work on".yellow
+          lines << "No stories ready to work on".yellow
         end
-        info
+        lines
       end
     end
   end

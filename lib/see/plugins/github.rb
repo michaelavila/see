@@ -19,33 +19,30 @@ module See
           return info
         end
 
-        client = Octokit::Client.new :access_token => token
         account = plugin_config['account']
         repository = plugin_config['repository']
         github_name = [account, repository].join '/'
 
+        client = Octokit::Client.new :access_token => token
         pull_requests = client.pull_requests(github_name)
-        if pull_requests.count > 0
-          info << "  Open pull requests:".light_blue
-          pull_requests.each do |pull_request|
-            username = "[#{pull_request.user.login}]".cyan
-            time = "- #{pull_request.updated_at.strftime("%b %e,%l:%M %p")}".black
-            info << "    - #{pull_request.title} #{username} #{time}"
-          end
-        else
-          info << "  No open pull requests".yellow
-        end
+        info.concat(show_collection('Pull Requests', pull_requests))
 
         issues = client.issues(github_name)
-        if issues.count > 0
-          info << "  Open issues:".light_blue
-          issues.each do |issue|
-            username = "[#{issue.user.login}]".cyan
-            time = "- #{issue.updated_at.strftime("%b %e,%l:%M %p")}".black
-            info << "    - #{issue.title} #{username} #{time}"
+        info.concat(show_collection('Issues', issues))
+        info
+      end
+
+      def show_collection(name, collection)
+        info = []
+        if collection.count > 0
+          info << "  Open #{name.downcase}:".light_blue
+          info << collection.map do |github_object|
+            username = "[#{github_object.user.login}]".cyan
+            time = "- #{github_object.updated_at.strftime("%b %e,%l:%M %p")}".black
+            "    - #{github_object.title} #{username} #{time}"
           end
         else
-          info << "No open issues".yellow
+          info << "  No open #{name.downcase}".yellow
         end
         info
       end
