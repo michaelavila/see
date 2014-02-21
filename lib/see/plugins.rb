@@ -1,7 +1,6 @@
 module See
   module Plugins
     require 'colorize'
-    require 'circleci'
 
     def self.run_plugin(name, config)
       plugins = See::Plugins.constants.map do |const|
