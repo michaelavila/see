@@ -1,5 +1,3 @@
-require 'yaml'
-
 module See
   class Runner
     def self.run
@@ -15,7 +13,7 @@ module See
       #   2. provide information from each configured plugin
       #     (provide content at the top and no content at the bottom)
       #
-      config = load_config
+      config = See::Config.load
 
       progress = ProgressIndicator.start(config.length)
       threads = []
@@ -33,21 +31,8 @@ module See
       progress.stop
 
       puts
-      puts lines.join "\n"
+      lines.each { |t| puts t }
       puts
-    end
-
-    def load_config
-      config_path = "#{Dir.pwd}/see.yml"
-      begin
-        config = YAML.load_file(config_path)
-      rescue => error
-        puts "No configuration file found (tried #{config_path})".yellow
-        puts '  (if the file exists it may be malformed)'
-        puts "  #{error}".light_red
-        exit 1
-      end
-      config
     end
   end
 

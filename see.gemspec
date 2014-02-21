@@ -7,6 +7,7 @@ spec = Gem::Specification.new do |s|
   s.summary = 'Project status for programmers'
   s.files = %w(
 bin/see
+lib/see/config.rb
 lib/see/plugins.rb
 lib/see/plugins/github.rb
 lib/see/plugins/pivotal.rb
