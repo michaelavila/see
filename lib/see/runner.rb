@@ -26,7 +26,7 @@ module See
 
       progress = Thread.new do
         print "Pulling data from #{config.length} source#{config.length == 1 ? '' : 's'}"
-        while true
+        loop do
           sleep 0.25
           print '.'
         end
@@ -35,11 +35,16 @@ module See
       threads = []
       config.each do |cfg|
         threads << Thread.new do
-          Thread.current[:lines] = See::Plugins.run_plugin(cfg[0], config)
+          begin
+            Thread.current[:lines] = [See::Plugins.run_plugin(cfg[0], config)]
+          rescue => error
+            Thread.current[:lines] = ["Error running plugin: #{cfg[0]}".red]
+            Thread.current[:lines] << "  #{error}".light_red
+          end
         end
       end
 
-      lines = threads.map { |t| t.join[:lines] }
+      lines = threads.map { |t| t.join[:lines].flatten }
       progress.kill
 
       puts
