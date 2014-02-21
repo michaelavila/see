@@ -29,15 +29,11 @@ module See
           end
         end
       end
-      lines = threads.map { |t| t.join[:lines] }
+      lines = threads.map { |t| t.join[:lines] }.sort_by { |l| l[0] }
       progress.stop
 
       puts
-      # I don't understand the point of the sort_by below. It gives me
-      # the same thing as the following:
-      #
-      #     lines.each { |l| puts l }
-      lines.sort_by { |l| l[0] }.each { |l| puts l }
+      puts lines.join "\n"
       puts
     end
 
