@@ -3,6 +3,10 @@ require 'octokit'
 module See
   module Plugins
     class GitHub
+      def display_name
+        'GitHub'
+      end
+
       def config_name
         'github'
       end
@@ -11,7 +15,6 @@ module See
         info = []
         token = ENV['GITHUB_ACCESS_TOKEN']
         unless token
-          info << "\nGitHub".light_red
           info << "  You must set GITHUB_ACCESS_TOKEN env variable".red
           return info
         end
@@ -22,7 +25,6 @@ module See
         github_name = [account, repository].join '/'
 
         pull_requests = client.pull_requests(github_name)
-        info << "\nGitHub".light_magenta
         if pull_requests.count > 0
           info << "  Open pull requests:".light_blue
           pull_requests.each do |pull_request|

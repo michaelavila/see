@@ -3,6 +3,10 @@ require 'json'
 module See
   module Plugins
     class Circle
+      def display_name
+        'CircleCi'
+      end
+
       def config_name
         'circle'
       end
@@ -11,7 +15,6 @@ module See
         info = []
         token = ENV['CIRCLE_CI_ACCESS_TOKEN']
         unless token
-          info << "\nCircle CI".light_red
           info << "  You must set CIRCLE_CI_ACCESS_TOKEN env variable".red
           return info
         end
@@ -22,14 +25,13 @@ module See
 
         response = CircleCi::Project.recent_builds(config['circle']['account'], config['circle']['repository'])
         if response.errors.length > 0
-          info << "\nCircle CI - " + "Errors encountered:".red
+          info << "Circle CI - " + "Errors encountered:".red
           response.errors.each do |error|
             info << "  - " + "Error #{error.code}:".red + " #{JSON.parse(error.message)['message'].strip}"
           end
           return info
         end
 
-        info << "\nCircle CI".light_magenta
         info << "  Latest Builds:".light_blue
         response.body[0..4].each do |thing|
           if thing['committer_date']

@@ -10,15 +10,17 @@ module See
         plugin.config_name == name
       end
       
-      info = []
+      lines = []
       plugins.each do |plugin|
-        info.concat(plugin.run(config))
+        lines << "\n"
+        lines << plugin.display_name.light_magenta
+        lines.concat(plugin.run(config))
       end
       
       if plugins.empty?
-        info << "No plugin found with the name \"#{name}\"".light_red
+        lines << "\nNo plugin found with the name \"#{name}\"".light_red
       end
-      info
+      lines
     end
   end
 end

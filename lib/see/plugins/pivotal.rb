@@ -3,6 +3,10 @@ require 'pivotal-tracker'
 module See
   module Plugins
     class Pivotal
+      def display_name
+        'Pivotal Tracker'
+      end
+
       def config_name
         "pivotal"
       end
@@ -11,7 +15,6 @@ module See
         info = []
         token = ENV['PIVOTAL_TRACKER_ACCESS_TOKEN']
         unless token
-          info << "\nPivotal Tracker".light_red
           info << "  You must set PIVOTAL_TRACKER_ACCESS_TOKEN env variable".red
           return info
         end
@@ -36,7 +39,6 @@ module See
           end
         end
 
-        info << "\nPivotal Tracker".light_magenta
         if stories.length > 0
           info << "  Stories being worked on:".light_blue
           info << stories

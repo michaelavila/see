@@ -3,6 +3,10 @@ require 'travis'
 module See
   module Plugins
     class TravisCI
+      def display_name
+        'Travis CI'
+      end
+
       def config_name
         'travis'
       end
@@ -22,11 +26,9 @@ module See
         end
 
         if builds.count > 0
-          info << "\nTravis".light_magenta
           info << "  Latest Builds:".light_blue
           info.concat(builds)
         else
-          info << "Travis"
           info << "No available build status".yellow
         end
         info
