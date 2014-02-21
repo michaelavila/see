@@ -11,14 +11,14 @@ module See
       end
       
       lines = []
-      plugins.each do |plugin|
-        lines << "\n"
-        lines << plugin.display_name.light_magenta
-        lines.concat(plugin.run(config))
-      end
-      
       if plugins.empty?
         lines << "\nNo plugin found with the name \"#{name}\"".light_red
+      else
+        plugins.each do |plugin|
+          lines << "\n"
+          lines << plugin.display_name.light_magenta
+          lines.concat(plugin.run(config))
+        end
       end
       lines
     end
