@@ -36,15 +36,15 @@ module See
       config.each do |cfg|
         threads << Thread.new do
           begin
-            Thread.current[:lines] = [See::Plugins.run_plugin(cfg[0], config)]
+            Thread.current[:lines] = See::Plugins.run_plugin(cfg[0], config)
           rescue => error
-            Thread.current[:lines] = ["Error running plugin: #{cfg[0]}".red]
-            Thread.current[:lines] << "  #{error}".light_red
+            Thread.current[:lines] = "\nError running plugin: #{cfg[0]}".red
+            Thread.current[:lines] << "\n  #{error}".light_red
           end
         end
       end
 
-      lines = threads.map { |t| t.join[:lines].flatten }
+      lines = threads.map { |t| t.join[:lines] }
       progress.kill
 
       puts
