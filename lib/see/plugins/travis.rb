@@ -11,9 +11,9 @@ module See
         'travis'
       end
 
-      def run(config)
+      def run(config, plugin_config)
         info = []
-        repository = config["travis"]["repository"]
+        repository = plugin_config["repository"]
         builds = Travis::Repository.find(repository).recent_builds[0..4].map do |build|
           time = ( build.finished_at ? "- #{build.finished_at.strftime("%b %e,%l:%M %p")}" : "- running" ).black
           if build.pending?

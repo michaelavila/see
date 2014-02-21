@@ -12,7 +12,7 @@ module See
         'circle'
       end
 
-      def run(config)
+      def run(config, plugin_config)
         info = []
         token = ENV['CIRCLE_CI_ACCESS_TOKEN']
         unless token
@@ -24,7 +24,7 @@ module See
           cfg.token = token
         end
 
-        response = CircleCi::Project.recent_builds(config['circle']['account'], config['circle']['repository'])
+        response = CircleCi::Project.recent_builds(plugin_config['account'], plugin_config['repository'])
         if response.errors.length > 0
           info << "Circle CI - " + "Errors encountered:".red
           response.errors.each do |error|

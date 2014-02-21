@@ -11,7 +11,7 @@ module See
         "pivotal"
       end
 
-      def run(config)
+      def run(config, plugin_config)
         info = []
         token = ENV['PIVOTAL_TRACKER_ACCESS_TOKEN']
         unless token
@@ -20,7 +20,7 @@ module See
         end
 
         PivotalTracker::Client.token = token
-        project = PivotalTracker::Project.find(config['pivotal']['project'])
+        project = PivotalTracker::Project.find(plugin_config['project'])
 
         next_unowned_story = nil
         has_current = false

@@ -11,7 +11,7 @@ module See
         'github'
       end
 
-      def run(config)
+      def run(config, plugin_config)
         info = []
         token = ENV['GITHUB_ACCESS_TOKEN']
         unless token
@@ -20,8 +20,8 @@ module See
         end
 
         client = Octokit::Client.new :access_token => token
-        account = config['github']['account']
-        repository = config['github']['repository']
+        account = plugin_config['account']
+        repository = plugin_config['repository']
         github_name = [account, repository].join '/'
 
         pull_requests = client.pull_requests(github_name)

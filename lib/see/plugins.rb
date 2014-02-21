@@ -16,7 +16,7 @@ module See
         plugins.each do |plugin|
           lines << "\n"
           lines << plugin.display_name.light_magenta
-          lines.concat(plugin.run(config))
+          lines.concat(plugin.run(config, config[plugin.config_name]))
         end
       end
       lines
