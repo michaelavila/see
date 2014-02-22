@@ -20,15 +20,19 @@ module See
 
         lines << "  Latest Builds:".light_blue
         lines << builds.map do |build|
-          state = colorize_state(build)
-          commit_id = build.commit.short_sha.light_yellow
-          build_number = ("#"+build.number).light_green
-          author = "[#{build.commit.author_name}]".cyan
-          fmt = "%b %e,%l:%M %p"
-          time = (build.finished_at ? "- #{build.finished_at.strftime(fmt)}" : "- running").black
-
-          "    - #{state} #{commit_id} #{build_number} #{build.commit.subject} #{author} #{time}"
+          turn_build_into_line(build)
         end
+      end
+
+      def turn_build_into_line(build)
+        state = colorize_state(build)
+        commit_id = build.commit.short_sha.light_yellow
+        build_number = ("#"+build.number).light_green
+        author = "[#{build.commit.author_name}]".cyan
+        fmt = "%b %e,%l:%M %p"
+        time = (build.finished_at ? "- #{build.finished_at.strftime(fmt)}" : "- running").black
+
+        "    - #{state} #{commit_id} #{build_number} #{build.commit.subject} #{author} #{time}"
       end
 
       def recent_builds(repository)
