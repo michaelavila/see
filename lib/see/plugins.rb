@@ -1,7 +1,12 @@
+require 'colorize'
+
+require_relative 'plugins/github'
+require_relative 'plugins/pivotal'
+require_relative 'plugins/travis'
+require_relative 'plugins/circle'
+
 module See
   module Plugins
-    require 'colorize'
-
     def self.run_plugin(name, config)
       plugins = See::Plugins.constants.map do |const|
         See::Plugins.const_get(const).new

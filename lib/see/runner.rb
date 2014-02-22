@@ -1,10 +1,6 @@
 module See
-  class Runner
+  module Runner
     def self.run
-      Runner.new.run
-    end
-
-    def run
       #
       # Whole thing happens in two major steps:
       #   1. load ./see.yml
@@ -14,7 +10,6 @@ module See
       #     (provide content at the top and no content at the bottom)
       #
       config = See::Config.load
-
       progress = ProgressIndicator.start(config.length)
       threads = []
       config.each do |cfg|
@@ -29,32 +24,31 @@ module See
       end
       lines = threads.map { |t| t.join[:lines] }.sort_by { |l| l[0] }
       progress.stop
-
       puts
       lines.each { |t| puts t }
       puts
     end
-  end
 
-  class ProgressIndicator
-    def self.start(things_todo_count)
-      progress = ProgressIndicator.new
-      progress.start(things_todo_count)
-      progress
-    end
+    class ProgressIndicator
+      def self.start(things_todo_count)
+        progress = ProgressIndicator.new
+        progress.start(things_todo_count)
+        progress
+      end
 
-    def start(things_todo_count)
-      @progress = Thread.new do
-        print "Pulling data from #{things_todo_count} source#{things_todo_count == 1 ? '' : 's'}"
-        loop do
-          sleep 0.25
-          print '.'
+      def start(things_todo_count)
+        @progress = Thread.new do
+          print "Pulling data from #{things_todo_count} source#{things_todo_count == 1 ? '' : 's'}"
+          loop do
+            sleep 0.25
+            print '.'
+          end
         end
       end
-    end
 
-    def stop
-      @progress.kill
+      def stop
+        @progress.kill
+      end
     end
   end
 end
