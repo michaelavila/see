@@ -3,7 +3,7 @@ require 'circleci'
 
 module See
   module Plugins
-    class Circle
+    class Circle < Plugin
       def display_name
         'CircleCi'
       end
@@ -14,12 +14,8 @@ module See
 
       def run(config, plugin_config)
         lines = []
-        token = ENV['CIRCLE_CI_ACCESS_TOKEN']
-        unless token
-          lines << "  You must set CIRCLE_CI_ACCESS_TOKEN env variable".red
-          return lines
-        end
 
+        token = access_token('CIRCLE_CI_ACCESS_TOKEN')
         CircleCi.configure do |cfg|
           cfg.token = token
         end

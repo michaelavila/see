@@ -2,7 +2,7 @@ require 'pivotal-tracker'
 
 module See
   module Plugins
-    class Pivotal
+    class Pivotal < Plugin
       def display_name
         'Pivotal Tracker'
       end
@@ -13,11 +13,7 @@ module See
 
       def run(config, plugin_config)
         lines = []
-        @token = ENV['PIVOTAL_TRACKER_ACCESS_TOKEN']
-        unless @token
-          lines << "  You must set PIVOTAL_TRACKER_ACCESS_TOKEN env variable".red
-          return lines
-        end
+        @token = access_token('PIVOTAL_TRACKER_ACCESS_TOKEN')
 
         PivotalTracker::Client.token = @token
         project = PivotalTracker::Project.find(plugin_config['project'])

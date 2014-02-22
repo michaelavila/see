@@ -2,7 +2,7 @@ require 'octokit'
 
 module See
   module Plugins
-    class GitHub
+    class GitHub < Plugin
       def display_name
         'GitHub'
       end
@@ -13,11 +13,7 @@ module See
 
       def run(config, plugin_config)
         info = []
-        token = ENV['GITHUB_ACCESS_TOKEN']
-        unless token
-          info << "  You must set GITHUB_ACCESS_TOKEN env variable".red
-          return info
-        end
+        token = access_token('GITHUB_ACCESS_TOKEN')
 
         account = plugin_config['account']
         repository = plugin_config['repository']
