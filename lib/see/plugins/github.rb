@@ -29,18 +29,17 @@ module See
       end
 
       def show_collection(name, collection)
-        info = []
-        if collection.count > 0
-          info << "  Open #{name.downcase}:".light_blue
-          info << collection.map do |github_object|
-            username = "[#{github_object.user.login}]".cyan
-            time = "- #{github_object.updated_at.strftime("%b %e,%l:%M %p")}".black
-            "    - #{github_object.title} #{username} #{time}"
-          end
-        else
-          info << "  No open #{name.downcase}".yellow
+        if collection.count == 0
+          return ["  No open #{name.downcase}".yellow]
         end
-        info
+
+        info = []
+        info << "  Open #{name.downcase}:".light_blue
+        info << collection.map do |github_object|
+          username = "[#{github_object.user.login}]".cyan
+          time = "- #{github_object.updated_at.strftime("%b %e,%l:%M %p")}".black
+          "    - #{github_object.title} #{username} #{time}"
+        end
       end
     end
   end
