@@ -12,26 +12,38 @@ module See
       end
 
       def run(config, plugin_config)
-        info = []
-        repository = plugin_config["repository"]
-        builds = Travis::Repository.find(repository).recent_builds[0..4].map do |build|
-          time = ( build.finished_at ? "- #{build.finished_at.strftime("%b %e,%l:%M %p")}" : "- running" ).black
-          if build.pending?
-            state = build.state.capitalize.cyan
-          else
-            state = build.unsuccessful? ? build.state.capitalize.red : build.state.capitalize.green
-          end
-          name = "[#{build.commit.author_name}]".cyan
-          "    - #{state} #{build.commit.short_sha.light_yellow} #{("#"+build.number).light_green} #{build.commit.subject} #{name} #{time}"
+        lines = []
+        builds = recent_builds(plugin_config['repository'])
+        if builds.count == 0
+          return ["No available build status".yellow]
         end
 
-        if builds.count > 0
-          info << "  Latest Builds:".light_blue
-          info.concat(builds)
-        else
-          info << "No available build status".yellow
+        lines << "  Latest Builds:".light_blue
+        lines << builds.map do |build|
+          state = colorize_state(build)
+          commit_id = build.commit.short_sha.light_yellow
+          build_number = ("#"+build.number).light_green
+          author = "[#{build.commit.author_name}]".cyan
+          fmt = "%b %e,%l:%M %p"
+          time = (build.finished_at ? "- #{build.finished_at.strftime(fmt)}" : "- running").black
+
+          "    - #{state} #{commit_id} #{build_number} #{build.commit.subject} #{author} #{time}"
         end
-        info
+      end
+
+      def recent_builds(repository)
+        Travis::Repository.find(repository).recent_builds[0..4]
+      end
+
+      def colorize_state(build)
+        if build.successful?
+          state_color = :green
+        elsif build.unsuccessful?
+          state_color = :red
+        else
+          state_color = :cyan
+        end
+        state = build.state.capitalize.send(state_color)
       end
     end
   end
