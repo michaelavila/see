@@ -13,26 +13,25 @@ module See
 
       def run(config, plugin_config)
         lines = []
-        @token = access_token('PIVOTAL_TRACKER_ACCESS_TOKEN')
+        project = get_project(plugin_config['project'])
+        stories_being_worked_on(project, lines)
+        next_story_to_be_worked_on(project, lines)
+        lines
+      end
 
-        PivotalTracker::Client.token = @token
-        project = PivotalTracker::Project.find(plugin_config['project'])
+      def get_project(project)
+        PivotalTracker::Client.token = access_token('PIVOTAL_TRACKER_ACCESS_TOKEN')
+        project = PivotalTracker::Project.find(project)
+      end
 
-        next_unowned_story = nil
-        has_current = false
-
-        stories = []
-        project.stories.all.each do |story|
-          next if story.accepted_at != nil
-          if story.owned_by == nil and not next_unowned_story
-            next_unowned_story = story
-          elsif story.owned_by
-            has_current = true
-            owner = "[#{story.owned_by}]".cyan
-            time = "- #{story.created_at.strftime("%b %e,%l:%M %p")}".black
-            id = "#{story.id}".light_yellow
-            stories << "    - #{story.name} #{owner} #{id} #{time}"
-          end
+      def stories_being_worked_on(project, lines)
+        stories = project.stories.all.select do |story|
+          story.current_state != 'unscheduled'
+        end.map do |story|
+          owner = "[#{story.owned_by}]".cyan
+          time = "- #{story.created_at.strftime("%b %e,%l:%M %p")}".black
+          id = "#{story.id}".light_yellow
+          "    - #{story.name} #{owner} #{id} #{time}"
         end
 
         if stories.length > 0
@@ -41,7 +40,12 @@ module See
         else
           lines << "  No stories being worked on".yellow
         end
+      end
 
+      def next_story_to_be_worked_on(project, lines)
+        next_unowned_story = project.stories.all.select do |story|
+          story.current_state == 'unscheduled'
+        end.first
 
         if next_unowned_story
           lines << "  Next story that can be worked on:".light_blue
@@ -50,9 +54,8 @@ module See
           name = next_unowned_story.name
           lines << "    - #{id} #{name} #{time}"
         else
-          lines << "No stories ready to work on".yellow
+          lines << "  No stories ready to work on".yellow
         end
-        lines
       end
     end
   end
