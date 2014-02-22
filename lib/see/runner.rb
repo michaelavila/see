@@ -11,9 +11,8 @@ module See
       #
       config = See::Config.load
       progress = ProgressIndicator.start(config.length)
-      threads = []
-      config.each do |cfg|
-        threads << Thread.new do
+      threads = config.map do |cfg|
+        Thread.new do
           begin
             Thread.current[:lines] = See::Plugins.run_plugin(cfg[0], config)
           rescue => error
@@ -22,8 +21,10 @@ module See
           end
         end
       end
+
       lines = threads.map { |t| t.join[:lines] }.sort_by { |l| l[0] }
       progress.stop
+
       puts
       lines.each { |t| puts t }
       puts
