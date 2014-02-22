@@ -43,21 +43,27 @@ module See
       end
 
       def recent_builds(account, repository, lines)
+        configure_circle_ci
+        response = CircleCi::Project.recent_builds(account, repository)
+        check_for_errors(response, lines)
+        response.body[0..4]
+      end
+
+      def check_for_errors(response, lines)
+        if response.errors.length > 0
+          lines << "  Errors encountered:".red
+          lines << response.errors.map do |error|
+             "    - " + "Error #{error.code}:".red + " #{JSON.parse(error.message)['message'].strip}"
+          end
+          raise
+        end
+      end
+
+      def configure_circle_ci
         token = access_token('CIRCLE_CI_ACCESS_TOKEN')
         CircleCi.configure do |cfg|
           cfg.token = token
         end
-
-        response = CircleCi::Project.recent_builds(account, repository)
-        if response.errors.length > 0
-          lines << "  Errors encountered:".red
-          response.errors.each do |error|
-            lines << "    - " + "Error #{error.code}:".red + " #{JSON.parse(error.message)['message'].strip}"
-            raise
-          end
-        end
-
-        response.body[0..4]
       end
     end
   end
