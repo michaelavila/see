@@ -13,3 +13,20 @@ Use rubygems:
 Or add it to your Gemfile
 
     gem 'see'
+
+## Configure Your Project
+
+All you need is a file named `see.yml` at the root of your project that contains all or some of the following configurations:
+
+    github:
+      account: michaelavila
+      repository: see
+    travis:
+      repository: michaelavila/see
+    circle:
+      account: michaelavila
+      repository: see
+    pivotal:
+      project: 1016378
+
+You will obviously need to change the values to your own. These are taken directly from this projects [configuration](see.yml)
