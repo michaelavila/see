@@ -30,3 +30,7 @@ All you need is a file named `see.yml` at the root of your project that contains
       project: 1016378
 
 You will obviously need to change the values to your own. These are taken directly from this projects [configuration](see.yml)
+
+## Plugins
+
+A list of plugins can be found [here](lib/see/plugins). Documentation for a particular plugin will be located in that plugin's source. Currently, all plugins are bundled with see and so there is no use to install external plugins. I imagine this changing possibly.
